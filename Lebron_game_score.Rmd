@@ -1,0 +1,31 @@
+---
+title: "Lakers-2019-season-prediction"
+author: "Jiancong Shen"
+date: "10/12/2019"
+output: html_document
+---
+#download and load nbastatR package
+```{r}
+devtools::install_github("abresler/nbastatR")
+library(nbastatR)
+```
+#assign data to the environment
+```{r}
+assign_nba_players()
+assign_nba_teams()
+Lebron <- read.csv("~/Desktop/Lebron.csv")
+```
+#calculate game score and clean data
+```{r}
+library(dplyr)
+Lbj<- Lebron %>%
+  select(-c("Pos","X3P":"eFG.")) %>%
+  mutate(game_score = PTS+0.4*FG.-0.7*FGA-0.4*(FTA-FT.)+0.7*ORB+0.3*DRB+STL+0.7*AST+0.7*BLK-0.4*PF-TOV)
+  
+```
+#draw a graph base on lebron's game score
+```{r}
+library(ggplot2)
+ggplot(Lbj,aes(x=Season,y=game_score,group=1)) + geom_line(color="purple")+geom_point(color="yellow") +
+  theme(axis.text.x = element_text(angle = 90,hjust = 1))
+```
